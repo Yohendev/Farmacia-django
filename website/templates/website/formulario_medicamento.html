@@ -8,8 +8,12 @@
     .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
     .form-group label { font-weight: 600; color: var(--primary-color); font-size: 0.95rem; }
     .form-group input[type="text"], .form-group input[type="number"], .form-group select { padding: 14px; border: 1px solid #D1D5DB; border-radius: 6px; background: #FFFFFF; font-size: 1rem; color: var(--text-dark); width: 100%; outline: none; transition: var(--transition); }
-    .form-group input[type="file"] { padding: 10px; background: var(--bg-light); cursor: pointer; }
     .form-group input:focus, .form-group select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.1); }
+    .file-upload-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 30px; border: 2px dashed #D1D5DB; border-radius: 6px; background-color: var(--bg-light); cursor: pointer; transition: var(--transition); text-align: center; }
+    .file-upload-wrapper:hover { border-color: var(--accent-color); background-color: #EBF5FF; }
+    .file-upload-wrapper input[type="file"] { display: none; }
+    .file-upload-text { color: var(--primary-color); font-weight: 600; font-size: 1.1rem; }
+    .file-upload-text span { color: var(--text-dark); font-weight: normal; font-size: 0.9rem; display: block; margin-top: 5px; }
     .image-preview { margin-top: 10px; padding: 10px; background-color: var(--bg-light); border-radius: 6px; display: inline-block; }
     .image-preview p { font-size: 0.85rem; color: var(--text-dark); margin-bottom: 5px; font-weight: 600; }
     .image-preview img { max-width: 120px; height: auto; border-radius: 6px; border: 1px solid #D1D5DB; }
@@ -88,13 +92,19 @@
                 {% for error in form.em_estoque.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
             </div>
             <div class="form-group">
-                <label for="imagem">Fotografia do Produto</label>
-                <input type="file" id="imagem" name="imagem" accept="image/png, image/jpeg, image/webp" class="{% if form.imagem.errors %}input-error{% endif %}">
+                <label>Imagem do Produto</label>
+                <label class="file-upload-wrapper">
+                    <input type="file" id="imagem" name="imagem" accept="image/png, image/jpeg, image/webp" class="{% if form.imagem.errors %}input-error{% endif %}">
+                    <div class="file-upload-text">
+                        📁 Clique aqui para anexar a imagem
+                        <span>Formatos aceitos: PNG, JPG ou WEBP</span>
+                    </div>
+                </label>
                 {% for error in form.imagem.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
                 {% if medicamento and medicamento.imagem %}
                     <div class="image-preview">
                         <p>Imagem atual armazenada:</p>
-                        <img src="{{ medicamento.imagem.url }}" alt="Fotografia">
+                        <img src="{{ medicamento.imagem.url }}" alt="Imagem">
                     </div>
                 {% endif %}
             </div>
@@ -105,4 +115,15 @@
         </form>
     </div>
 </div>
+<script>
+    document.getElementById('imagem').addEventListener('change', function(e) {
+        const fileName = e.target.files[0]?.name;
+        const textElement = e.target.nextElementSibling;
+        if (fileName) {
+            textElement.innerHTML = `✅ Arquivo selecionado:<br><span style="color: var(--accent-color); font-weight: bold; font-size: 1rem;">${fileName}</span>`;
+        } else {
+            textElement.innerHTML = `📁 Clique aqui para anexar a imagem<span>Formatos aceitos: PNG, JPG ou WEBP</span>`;
+        }
+    });
+</script>
 {% endblock %}
