@@ -78,3 +78,21 @@ def cadastro_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+@login_required(login_url='login')
+def relatorios(request):
+    medicamentos = Medicamento.objects.all()
+    
+    total_produtos = medicamentos.count()
+    valor_total = sum(item.preco * item.quantidade for item in medicamentos)
+    estoque_baixo = medicamentos.filter(quantidade__lt=10, quantidade__gt=0).count()
+    esgotados = medicamentos.filter(quantidade=0).count()
+    
+    contexto = {
+        'total_produtos': total_produtos,
+        'valor_total': valor_total,
+        'estoque_baixo': estoque_baixo,
+        'esgotados': esgotados,
+    }
+    
+    return render(request, 'website/relatorios.html', contexto)

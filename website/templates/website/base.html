@@ -95,12 +95,12 @@
 <body>
     <header>
         <div class="logo">Neo<span>Luminis</span> | Admin</div>
-        <nav class="nav-admin">
-            <a href="#">Painel Geral</a>
-            <a href="{% url 'estoque' %}">Estoque</a>
-            <a href="#">Relatórios</a>
-            <a href="#">Sair</a>
-        </nav>
+            <nav class="nav-admin">
+                <a href="{% url 'home' %}">Painel Geral</a>
+                <a href="{% url 'estoque' %}">Estoque</a>
+                <a href="{% url 'relatorios' %}">Relatórios</a>
+                <a href="{% url 'logout' %}">Sair</a>
+            </nav>
     </header>
     <main>
         {% block content %}{% endblock %}
