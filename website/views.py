@@ -16,22 +16,22 @@ def estoque(request):
 
 @login_required(login_url='login')
 def criar_medicamento(request):
+    form = MedicamentoForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
-        form = MedicamentoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('estoque')
-    return render(request, 'website/formulario_medicamento.html')
+    return render(request, 'website/formulario_medicamento.html', {'form': form})
 
 @login_required(login_url='login')
 def editar_medicamento(request, pk):
     medicamento = get_object_or_404(Medicamento, pk=pk)
+    form = MedicamentoForm(request.POST or None, request.FILES or None, instance=medicamento)
     if request.method == 'POST':
-        form = MedicamentoForm(request.POST, request.FILES, instance=medicamento)
         if form.is_valid():
             form.save()
             return redirect('estoque')
-    return render(request, 'website/formulario_medicamento.html', {'medicamento': medicamento})
+    return render(request, 'website/formulario_medicamento.html', {'form': form, 'medicamento': medicamento})
 
 @login_required(login_url='login')
 def excluir_medicamento(request, pk):

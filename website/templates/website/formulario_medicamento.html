@@ -7,9 +7,9 @@
     .form-card h1 { color: var(--primary-color); font-size: 1.8rem; margin-bottom: 30px; }
     .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
     .form-group label { font-weight: 600; color: var(--primary-color); font-size: 0.95rem; }
-    .form-group input, .form-group select, .form-group textarea { padding: 14px; border: 1px solid #D1D5DB; border-radius: 6px; background: #FFFFFF; font-size: 1rem; color: var(--text-dark); width: 100%; outline: none; transition: var(--transition); }
+    .form-group input[type="text"], .form-group input[type="number"], .form-group select { padding: 14px; border: 1px solid #D1D5DB; border-radius: 6px; background: #FFFFFF; font-size: 1rem; color: var(--text-dark); width: 100%; outline: none; transition: var(--transition); }
     .form-group input[type="file"] { padding: 10px; background: var(--bg-light); cursor: pointer; }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.1); }
+    .form-group input:focus, .form-group select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.1); }
     .image-preview { margin-top: 10px; padding: 10px; background-color: var(--bg-light); border-radius: 6px; display: inline-block; }
     .image-preview p { font-size: 0.85rem; color: var(--text-dark); margin-bottom: 5px; font-weight: 600; }
     .image-preview img { max-width: 120px; height: auto; border-radius: 6px; border: 1px solid #D1D5DB; }
@@ -18,6 +18,11 @@
     .button-group { display: flex; justify-content: flex-end; gap: 15px; margin-top: 30px; border-top: 1px solid #E5E7EB; padding-top: 20px; }
     .btn-submit { background-color: var(--secondary-color); color: var(--primary-color); }
     .btn-submit:hover { background-color: #00BFFF; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2); }
+    .error-text { color: var(--danger-color); font-size: 0.85rem; font-weight: 600; margin-top: 4px; }
+    .input-error { border-color: var(--danger-color) !important; background-color: #FDEDED !important; }
+    .checkbox-wrapper { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
+    .checkbox-wrapper input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent-color); cursor: pointer; }
+    .checkbox-wrapper label { cursor: pointer; font-size: 1rem; color: var(--text-dark); font-weight: 600;}
     @media (max-width: 600px) { .form-row { flex-direction: column; gap: 0; } .button-group { flex-direction: column-reverse; } .btn { width: 100%; text-align: center; } }
 </style>
 {% endblock %}
@@ -29,43 +34,69 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="nome">Nome do Produto</label>
-                <input type="text" id="nome" name="nome" value="{% if medicamento %}{{ medicamento.nome }}{% endif %}" required>
+                <input type="text" id="nome" name="nome" value="{{ form.nome.value|default_if_none:'' }}" class="{% if form.nome.errors %}input-error{% endif %}">
+                {% for error in form.nome.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
             </div>
             <div class="form-group">
                 <label for="apresentacao">Apresentação / Descrição</label>
-                <input type="text" id="apresentacao" name="apresentacao" value="{% if medicamento %}{{ medicamento.apresentacao }}{% endif %}" required>
+                <input type="text" id="apresentacao" name="apresentacao" value="{{ form.apresentacao.value|default_if_none:'' }}" class="{% if form.apresentacao.errors %}input-error{% endif %}">
+                {% for error in form.apresentacao.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
             </div>
             <div class="form-row">
                 <div class="form-group">
                     <label for="categoria">Categoria</label>
-                    <select id="categoria" name="categoria" required>
-                        <option value="" disabled {% if not medicamento %}selected{% endif %}>Selecione...</option>
-                        <option value="analgesicos" {% if medicamento.categoria == 'analgesicos' %}selected{% endif %}>Analgésicos</option>
-                        <option value="antibioticos" {% if medicamento.categoria == 'antibioticos' %}selected{% endif %}>Antibióticos</option>
-                        <option value="uso-continuo" {% if medicamento.categoria == 'uso-continuo' %}selected{% endif %}>Uso Contínuo</option>
-                        <option value="suplementos" {% if medicamento.categoria == 'suplementos' %}selected{% endif %}>Suplementos</option>
+                    <select id="categoria" name="categoria" class="{% if form.categoria.errors %}input-error{% endif %}">
+                        <option value="" disabled {% if not form.categoria.value %}selected{% endif %}>Selecione...</option>
+                        {% for key, name in form.fields.categoria.choices %}
+                            {% if key %}
+                                <option value="{{ key }}" {% if form.categoria.value == key %}selected{% endif %}>{{ name }}</option>
+                            {% endif %}
+                        {% endfor %}
                     </select>
+                    {% for error in form.categoria.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
                 </div>
                 <div class="form-group">
-                    <label for="imagem">Fotografia do Produto</label>
-                    <input type="file" id="imagem" name="imagem" accept="image/png, image/jpeg, image/webp">
-                    {% if medicamento and medicamento.imagem %}
-                        <div class="image-preview">
-                            <p>Imagem atual armazenada:</p>
-                            <img src="{{ medicamento.imagem.url }}" alt="Fotografia">
-                        </div>
-                    {% endif %}
+                    <label for="tarja">Classificação da Tarja</label>
+                    <select id="tarja" name="tarja" class="{% if form.tarja.errors %}input-error{% endif %}">
+                        <option value="" disabled {% if not form.tarja.value %}selected{% endif %}>Selecione...</option>
+                        {% for key, name in form.fields.tarja.choices %}
+                            {% if key %}
+                                <option value="{{ key }}" {% if form.tarja.value == key %}selected{% endif %}>{{ name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% for error in form.tarja.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
                     <label for="preco">Preço de Venda (R$)</label>
-                    <input type="number" id="preco" name="preco" step="0.01" value="{% if medicamento %}{{ medicamento.preco }}{% endif %}" required>
+                    <input type="number" id="preco" name="preco" step="0.01" value="{{ form.preco.value|default_if_none:'' }}" class="{% if form.preco.errors %}input-error{% endif %}">
+                    {% for error in form.preco.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
                 </div>
                 <div class="form-group">
                     <label for="quantidade">Quantidade em Estoque</label>
-                    <input type="number" id="quantidade" name="quantidade" value="{% if medicamento %}{{ medicamento.quantidade }}{% endif %}" required>
+                    <input type="number" id="quantidade" name="quantidade" value="{{ form.quantidade.value|default_if_none:'' }}" class="{% if form.quantidade.errors %}input-error{% endif %}">
+                    {% for error in form.quantidade.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
                 </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="em_estoque" name="em_estoque" {% if form.em_estoque.value or form.em_estoque.value is None %}checked{% endif %}>
+                    <label for="em_estoque">Produto disponível no estoque físico</label>
+                </div>
+                {% for error in form.em_estoque.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="imagem">Fotografia do Produto</label>
+                <input type="file" id="imagem" name="imagem" accept="image/png, image/jpeg, image/webp" class="{% if form.imagem.errors %}input-error{% endif %}">
+                {% for error in form.imagem.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
+                {% if medicamento and medicamento.imagem %}
+                    <div class="image-preview">
+                        <p>Imagem atual armazenada:</p>
+                        <img src="{{ medicamento.imagem.url }}" alt="Fotografia">
+                    </div>
+                {% endif %}
             </div>
             <div class="button-group">
                 <a href="{% url 'estoque' %}" class="btn btn-cancel">Cancelar</a>
