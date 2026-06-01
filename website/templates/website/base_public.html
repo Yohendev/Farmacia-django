@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Farmácia Neoluminis{% endblock %}</title>
+    <style>
+        :root {
+            --primary-color: #0A2540;
+            --secondary-color: #00D4FF;
+            --accent-color: #007ACC;
+            --text-dark: #2C3E50;
+            --text-light: #F8F9FA;
+            --bg-light: #EDF2F7;
+            --transition: all 0.3s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+        body {
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+        .logo {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .logo span {
+            color: var(--accent-color);
+        }
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        main {
+            flex: 1;
+        }
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: #051322;
+            color: #8C98A4;
+            font-size: 0.95rem;
+        }
+        @media (max-width: 600px) {
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% block header %}
+    <header>
+        <div class="container header-container">
+            <a href="/" class="logo">Neo<span>Luminis</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/#home">Início</a></li>
+                    <li><a href="/#sobre">Institucional</a></li>
+                    <li><a href="/#remedios">Medicamentos</a></li>
+                    <li><a href="/#outros">Bem-Estar</a></li>
+                    <li><a href="/#contato">Contato</a></li>
+                    <li><a href="{% url 'estoque' %}" style="color: var(--accent-color);">Acesso Restrito</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    {% endblock %}
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+    <footer>
+        <p>&copy; 2026 Farmácia Neoluminis. Todos os direitos reservados.</p>
+    </footer>
+    {% endblock %}
+</body>
+</html>

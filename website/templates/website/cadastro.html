@@ -1,189 +1,57 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro | Farmácia Neoluminis</title>
-    <style>
-        :root {
-            --primary-color: #0A2540;
-            --secondary-color: #00D4FF;
-            --accent-color: #007ACC;
-            --text-dark: #2C3E50;
-            --text-light: #F8F9FA;
-            --bg-light: #EDF2F7;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            color: var(--text-dark);
-            line-height: 1.6;
-            background: linear-gradient(rgba(10, 37, 64, 0.9), rgba(0, 122, 204, 0.8)), 
-                        url('https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&q=80&w=1920') center/cover;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-
-        .auth-container {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .auth-card {
-            background-color: #FFFFFF;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-
-        .logo {
-            font-size: 2rem;
-            color: var(--primary-color);
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .logo span {
-            color: var(--accent-color);
-        }
-
-        .auth-card h2 {
-            color: var(--primary-color);
-            margin-bottom: 30px;
-            font-size: 1.5rem;
-        }
-
-        .auth-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-
-        .form-row input {
-            width: 50%;
-        }
-
-        .auth-form input {
-            padding: 16px;
-            border: 1px solid #D1D5DB;
-            border-radius: 6px;
-            background: var(--bg-light);
-            width: 100%;
-            font-size: 1rem;
-            color: var(--text-dark);
-            transition: var(--transition);
-        }
-
-        .auth-form input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.2);
-        }
-
-        .btn-primary {
-            display: inline-block;
-            padding: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            text-decoration: none;
-            transition: var(--transition);
-            border: none;
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-            width: 100%;
-            font-size: 1.1rem;
-            margin-top: 15px;
-        }
-
-        .btn-primary:hover {
-            background-color: #00BFFF;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 212, 255, 0.3);
-        }
-
-        .auth-links {
-            margin-top: 25px;
-            font-size: 0.95rem;
-        }
-
-        .auth-links a {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: bold;
-            transition: var(--transition);
-        }
-
-        .auth-links a:hover {
-            color: var(--primary-color);
-            text-decoration: underline;
-        }
-
-        .back-home {
-            display: block;
-            margin-top: 15px;
-            color: var(--text-dark);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .back-home:hover {
-            color: var(--primary-color);
-        }
-
-        /* Responsividade para o formulário alinhado */
-        @media (max-width: 600px) {
-            .form-row {
-                flex-direction: column;
-            }
-            .form-row input {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="logo">Neo<span>Luminis</span></div>
-            <h2>Crie sua conta</h2>
-            
-            <form class="auth-form" method="POST">
-                <input type="text" name="nome_completo" placeholder="Nome Completo" required>
-                <input type="email" name="email" placeholder="E-mail" required>
-                <input type="tel" name="telefone" placeholder="Telefone" required>
-                
-                <div class="form-row">
-                    <input type="password" name="senha" placeholder="Senha" required>
-                    <input type="password" name="confirma_senha" placeholder="Confirmar Senha" required>
-                </div>
-                
-                <button type="submit" class="btn-primary">Finalizar Cadastro</button>
-            </form>
-
-            <div class="auth-links">
-                <p>Já possui uma conta? <a href="login.html">Faça login</a></p>
-                <a href="index.html" class="back-home">← Voltar para a página inicial</a>
+{% extends 'website/base_public.html' %}
+{% block title %}Cadastro | Farmácia Neoluminis{% endblock %}
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(rgba(10, 37, 64, 0.9), rgba(0, 122, 204, 0.8)), url('https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&q=80&w=1920') center/cover;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        display: flex;
+    }
+    main { display: flex; align-items: center; justify-content: center; width: 100%; }
+    .auth-container { width: 100%; max-width: 500px; margin: auto;}
+    .auth-card { background-color: #FFFFFF; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); text-align: center; }
+    .logo { font-size: 2rem; color: var(--primary-color); font-weight: bold; margin-bottom: 10px; text-decoration: none; display: block;}
+    .logo span { color: var(--accent-color); }
+    .auth-card h2 { color: var(--primary-color); margin-bottom: 30px; font-size: 1.5rem; }
+    .auth-form { display: flex; flex-direction: column; gap: 15px; }
+    .form-row { display: flex; gap: 15px; }
+    .form-row input { width: 50%; }
+    .auth-form input { padding: 16px; border: 1px solid #D1D5DB; border-radius: 6px; background: var(--bg-light); width: 100%; font-size: 1rem; color: var(--text-dark); transition: var(--transition); }
+    .auth-form input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.2); }
+    .btn-primary { display: inline-block; padding: 16px; border-radius: 6px; cursor: pointer; font-weight: bold; text-decoration: none; transition: var(--transition); border: none; background-color: var(--secondary-color); color: var(--primary-color); width: 100%; font-size: 1.1rem; margin-top: 15px; }
+    .btn-primary:hover { background-color: #00BFFF; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 212, 255, 0.3); }
+    .auth-links { margin-top: 25px; font-size: 0.95rem; }
+    .auth-links a { color: var(--accent-color); text-decoration: none; font-weight: bold; transition: var(--transition); }
+    .auth-links a:hover { color: var(--primary-color); text-decoration: underline; }
+    .back-home { display: block; margin-top: 15px; color: var(--text-dark); text-decoration: none; font-size: 0.9rem; }
+    .back-home:hover { color: var(--primary-color); }
+    @media (max-width: 600px) { .form-row { flex-direction: column; } .form-row input { width: 100%; } }
+</style>
+{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <a href="/" class="logo">Neo<span>Luminis</span></a>
+        <h2>Crie sua conta</h2>
+        <form class="auth-form" method="POST">
+            {% csrf_token %}
+            <input type="text" name="nome_completo" placeholder="Nome Completo" required>
+            <input type="email" name="email" placeholder="E-mail" required>
+            <input type="tel" name="telefone" placeholder="Telefone" required>
+            <div class="form-row">
+                <input type="password" name="senha" placeholder="Senha" required>
+                <input type="password" name="confirma_senha" placeholder="Confirmar Senha" required>
             </div>
+            <button type="submit" class="btn-primary">Finalizar Cadastro</button>
+        </form>
+        <div class="auth-links">
+            <p>Já possui uma conta? <a href="/login">Faça login</a></p>
+            <a href="/" class="back-home">← Voltar para a página inicial</a>
         </div>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}

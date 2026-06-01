@@ -1,335 +1,97 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle de Estoque | Farmácia Neoluminis</title>
-    <style>
-        :root {
-            --primary-color: #0A2540;
-            --secondary-color: #00D4FF;
-            --accent-color: #007ACC;
-            --text-dark: #2C3E50;
-            --text-light: #F8F9FA;
-            --bg-light: #EDF2F7;
-            --danger-color: #E74C3C;
-            --warning-color: #F1C40F;
-            --success-color: #2ECC71;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            color: var(--text-dark);
-            background-color: var(--bg-light);
-            line-height: 1.6;
-        }
-
-        /* Cabeçalho do Painel */
-        header {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .logo span {
-            color: var(--secondary-color);
-        }
-
-        .nav-admin a {
-            color: var(--text-light);
-            text-decoration: none;
-            margin-left: 20px;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .nav-admin a:hover {
-            color: var(--secondary-color);
-        }
-
-        /* Container Principal */
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .dashboard-header h1 {
-            color: var(--primary-color);
-            font-size: 2rem;
-        }
-
-        .btn-add {
-            background-color: var(--accent-color);
-            color: #FFFFFF;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-add:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
-        /* Barra de Controles (Pesquisa e Filtros) */
-        .controls-bar {
-            background-color: #FFFFFF;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .controls-bar input, .controls-bar select {
-            padding: 12px;
-            border: 1px solid #D1D5DB;
-            border-radius: 6px;
-            font-size: 1rem;
-            color: var(--text-dark);
-            outline: none;
-        }
-
-        .controls-bar input {
-            flex: 1;
-        }
-
-        .controls-bar input:focus, .controls-bar select:focus {
-            border-color: var(--accent-color);
-        }
-
-        /* Tabela de Estoque */
-        .table-wrapper {
-            background-color: #FFFFFF;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        thead {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-        }
-
-        th, td {
-            padding: 16px 20px;
-            border-bottom: 1px solid #E5E7EB;
-        }
-
-        th {
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        tbody tr:hover {
-            background-color: #F8FAFC;
-        }
-
-        /* Indicadores de Status */
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #FFFFFF;
-            text-align: center;
-            display: inline-block;
-        }
-
-        .status-success { background-color: var(--success-color); }
-        .status-warning { background-color: var(--warning-color); color: var(--text-dark); }
-        .status-danger { background-color: var(--danger-color); }
-
-        /* Botões de Ação na Tabela */
-        .action-btns {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-icon {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: var(--transition);
-        }
-
-        .btn-edit:hover { color: var(--accent-color); transform: scale(1.1); }
-        .btn-delete:hover { color: var(--danger-color); transform: scale(1.1); }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .dashboard-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .controls-bar {
-                flex-direction: column;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <div class="logo">Neo<span>Luminis</span> | Admin</div>
-        <nav class="nav-admin">
-            <a href="#">Painel Geral</a>
-            <a href="#" style="color: var(--secondary-color);">Estoque</a>
-            <a href="#">Relatórios</a>
-            <a href="index.html">Sair</a>
-        </nav>
-    </header>
-
-    <main class="dashboard-container">
-        
-        <div class="dashboard-header">
-            <h1>Inventário de Medicamentos</h1>
-            <button class="btn-add">➕ Cadastrar Novo</button>
-        </div>
-
-        <div class="controls-bar">
-            <input type="text" placeholder="Pesquisar por nome, princípio ativo ou código barras...">
-            <select>
-                <option value="">Todas as Categorias</option>
-                <option value="analgesicos">Analgésicos</option>
-                <option value="antibioticos">Antibióticos</option>
-                <option value="uso-continuo">Uso Contínuo</option>
-                <option value="suplementos">Suplementos</option>
-            </select>
-            <select>
-                <option value="">Filtrar por Status</option>
-                <option value="ok">Em Estoque</option>
-                <option value="baixo">Estoque Baixo</option>
-                <option value="esgotado">Esgotado</option>
-            </select>
-        </div>
-
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Cód.</th>
-                        <th>Nome do Produto</th>
-                        <th>Categoria</th>
-                        <th>Preço (R$)</th>
-                        <th>Quantidade</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>#78901</td>
-                        <td><strong>Paracetamol 750mg</strong><br><small>Caixa com 20 comprimidos</small></td>
-                        <td>Analgésicos</td>
-                        <td>12,50</td>
-                        <td>145 cx</td>
-                        <td><span class="status-badge status-success">Em Estoque</span></td>
-                        <td class="action-btns">
-                            <button class="btn-icon btn-edit" title="Editar">✏️</button>
-                            <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td>#78902</td>
-                        <td><strong>Losartana Potássica 50mg</strong><br><small>Caixa com 30 comprimidos</small></td>
-                        <td>Uso Contínuo</td>
-                        <td>8,90</td>
-                        <td>12 cx</td>
-                        <td><span class="status-badge status-warning">Estoque Baixo</span></td>
-                        <td class="action-btns">
-                            <button class="btn-icon btn-edit" title="Editar">✏️</button>
-                            <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>#78903</td>
-                        <td><strong>Amoxicilina 500mg</strong><br><small>Suspensão Oral 150ml</small></td>
-                        <td>Antibióticos</td>
-                        <td>24,30</td>
-                        <td>50 un</td>
-                        <td><span class="status-badge status-success">Em Estoque</span></td>
-                        <td class="action-btns">
-                            <button class="btn-icon btn-edit" title="Editar">✏️</button>
-                            <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>#78904</td>
-                        <td><strong>Vitamina C Zinco + D</strong><br><small>Tubo com 10 efervescentes</small></td>
-                        <td>Suplementos</td>
-                        <td>18,00</td>
-                        <td>0 un</td>
-                        <td><span class="status-badge status-danger">Esgotado</span></td>
-                        <td class="action-btns">
-                            <button class="btn-icon btn-edit" title="Editar">✏️</button>
-                            <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>#78905</td>
-                        <td><strong>Dipirona Sódica 500mg/ml</strong><br><small>Frasco 20ml gotas</small></td>
-                        <td>Analgésicos</td>
-                        <td>6,50</td>
-                        <td>89 un</td>
-                        <td><span class="status-badge status-success">Em Estoque</span></td>
-                        <td class="action-btns">
-                            <button class="btn-icon btn-edit" title="Editar">✏️</button>
-                            <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
-
-</body>
-</html>
+{% extends 'website/base.html' %}
+{% block title %}Controle de Estoque | Farmácia Neoluminis{% endblock %}
+{% block extra_css %}
+<style>
+    .dashboard-container { max-width: 1200px; margin: 0 auto; }
+    .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .dashboard-header h1 { color: var(--primary-color); font-size: 2rem; }
+    .btn-add { background-color: var(--accent-color); color: #FFFFFF; padding: 12px 24px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; transition: var(--transition); display: flex; align-items: center; gap: 8px; }
+    .btn-add:hover { background-color: var(--primary-color); transform: translateY(-2px); }
+    .controls-bar { background-color: #FFFFFF; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; gap: 15px; margin-bottom: 30px; }
+    .controls-bar input, .controls-bar select { padding: 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 1rem; color: var(--text-dark); outline: none; }
+    .controls-bar input { flex: 1; }
+    .controls-bar input:focus, .controls-bar select:focus { border-color: var(--accent-color); }
+    .table-wrapper { background-color: #FFFFFF; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    thead { background-color: var(--primary-color); color: var(--text-light); }
+    th, td { padding: 16px 20px; border-bottom: 1px solid #E5E7EB; }
+    th { font-weight: 600; letter-spacing: 0.5px; }
+    tbody tr:hover { background-color: #F8FAFC; }
+    .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; color: #FFFFFF; text-align: center; display: inline-block; }
+    .status-success { background-color: var(--success-color); }
+    .status-warning { background-color: var(--warning-color); color: var(--text-dark); }
+    .status-danger { background-color: var(--danger-color); }
+    .action-btns { display: flex; gap: 10px; }
+    .btn-icon { background: none; border: none; cursor: pointer; font-size: 1.2rem; transition: var(--transition); text-decoration: none;}
+    .btn-edit:hover { color: var(--accent-color); transform: scale(1.1); }
+    .btn-delete:hover { color: var(--danger-color); transform: scale(1.1); }
+    @media (max-width: 768px) { .dashboard-header { flex-direction: column; align-items: flex-start; gap: 15px; } .controls-bar { flex-direction: column; } }
+</style>
+{% endblock %}
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Inventário de Medicamentos</h1>
+        <a href="{% url 'criar_medicamento' %}" class="btn-add">➕ Cadastrar Novo</a>
+    </div>
+    <div class="controls-bar">
+        <input type="text" placeholder="Pesquisar por nome, princípio ativo ou código barras...">
+        <select>
+            <option value="">Todas as Categorias</option>
+            <option value="analgesicos">Analgésicos</option>
+            <option value="antibioticos">Antibióticos</option>
+            <option value="uso-continuo">Uso Contínuo</option>
+            <option value="suplementos">Suplementos</option>
+        </select>
+        <select>
+            <option value="">Filtrar por Status</option>
+            <option value="ok">Em Estoque</option>
+            <option value="baixo">Estoque Baixo</option>
+            <option value="esgotado">Esgotado</option>
+        </select>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Cód.</th>
+                    <th>Nome do Produto</th>
+                    <th>Categoria</th>
+                    <th>Preço (R$)</th>
+                    <th>Quantidade</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for medicamento in medicamentos %}
+                <tr>
+                    <td>#{{ medicamento.id }}</td>
+                    <td><strong>{{ medicamento.nome }}</strong><br><small>{{ medicamento.apresentacao }}</small></td>
+                    <td>{{ medicamento.get_categoria_display }}</td>
+                    <td>{{ medicamento.preco }}</td>
+                    <td>{{ medicamento.quantidade }} un</td>
+                    <td>
+                        {% if medicamento.quantidade > 10 %}
+                            <span class="status-badge status-success">Em Estoque</span>
+                        {% elif medicamento.quantidade > 0 %}
+                            <span class="status-badge status-warning">Estoque Baixo</span>
+                        {% else %}
+                            <span class="status-badge status-danger">Esgotado</span>
+                        {% endif %}
+                    </td>
+                    <td class="action-btns">
+                        <a href="{% url 'editar_medicamento' medicamento.id %}" class="btn-icon btn-edit" title="Editar">✏️</a>
+                        <a href="{% url 'excluir_medicamento' medicamento.id %}" class="btn-icon btn-delete" title="Excluir">🗑️</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 30px;">Nenhum medicamento cadastrado no sistema.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

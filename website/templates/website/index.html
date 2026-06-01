@@ -1,440 +1,137 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farmácia Neoluminis | Inovação em Saúde</title>
-    <style>
-        :root {
-            --primary-color: #0A2540;
-            --secondary-color: #00D4FF;
-            --accent-color: #007ACC;
-            --text-dark: #2C3E50;
-            --text-light: #F8F9FA;
-            --bg-light: #EDF2F7;
-            --transition: all 0.3s ease;
-        }
+{% extends 'website/base_public.html' %}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            scroll-behavior: smooth;
-        }
+{% block title %}Farmácia Neoluminis | Inovação em Saúde{% endblock %}
 
-        body {
-            color: var(--text-dark);
-            line-height: 1.6;
-            background-color: #FFFFFF;
-        }
+{% block extra_css %}
+<style>
+    .section-padding { padding: 80px 0; }
+    .section-title { text-align: center; margin-bottom: 40px; font-size: 2.2rem; color: var(--primary-color); }
+    .bg-light { background-color: var(--bg-light); }
+    .bg-dark { background-color: var(--primary-color); color: var(--text-light); }
+    .hero { height: 100vh; background: linear-gradient(rgba(10, 37, 64, 0.8), rgba(0, 122, 204, 0.7)), url('https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&q=80&w=1920') center/cover; display: flex; align-items: center; justify-content: center; text-align: center; color: #FFFFFF; margin-top: 70px; }
+    .hero-content h2 { font-size: 3.5rem; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); }
+    .hero-content p { font-size: 1.4rem; margin-bottom: 30px; max-width: 800px; margin-left: auto; margin-right: auto; }
+    .btn-primary, .btn-secondary { display: inline-block; padding: 14px 28px; border-radius: 6px; cursor: pointer; font-weight: bold; text-decoration: none; transition: var(--transition); border: none; }
+    .btn-primary { background-color: var(--secondary-color); color: var(--primary-color); }
+    .btn-primary:hover { background-color: #00BFFF; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0, 212, 255, 0.3); }
+    .btn-secondary { background-color: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); margin-top: 15px; }
+    .btn-secondary:hover { background-color: var(--accent-color); color: #FFFFFF; }
+    .sobre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+    .sobre-texto h2 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 20px; }
+    .sobre-texto p { margin-bottom: 15px; font-size: 1.1rem; text-align: justify; }
+    .sobre-imagem img { width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); object-fit: cover; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+    .card { background: #FFFFFF; padding: 40px; border-radius: 12px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.06); transition: var(--transition); border-top: 4px solid var(--accent-color); color: var(--text-dark); }
+    .card:hover { transform: translateY(-10px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+    .card-icon { font-size: 3.5rem; margin-bottom: 20px; display: block; }
+    .card h3 { margin-bottom: 15px; color: var(--primary-color); }
+    .product-card { background: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: var(--transition); color: var(--text-dark); }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+    .product-img { width: 100%; height: 200px; object-fit: cover; }
+    .product-content { padding: 25px; text-align: center; }
+    .product-content h3 { color: var(--primary-color); margin-bottom: 10px; }
+    .contato-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; }
+    .contato-info h2 { font-size: 2.2rem; margin-bottom: 20px; }
+    .contato-info ul { list-style: none; margin-top: 30px; }
+    .contato-info li { margin-bottom: 20px; font-size: 1.1rem; display: flex; align-items: center; gap: 15px; }
+    .contato-form { display: flex; flex-direction: column; gap: 20px; background: rgba(255,255,255,0.05); padding: 35px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+    .contato-form input, .contato-form textarea { padding: 16px; border: none; border-radius: 6px; background: #FFFFFF; width: 100%; font-size: 1rem; color: var(--text-dark); }
+    .fade-in { animation: fadeIn 1.2s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 992px) { .sobre-grid, .contato-grid { grid-template-columns: 1fr; } .hero-content h2 { font-size: 2.5rem; } }
+</style>
+{% endblock %}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .section-padding {
-            padding: 80px 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 2.2rem;
-            color: var(--primary-color);
-        }
-
-        .bg-light { background-color: var(--bg-light); }
-        .bg-dark { background-color: var(--primary-color); }
-        .text-white { color: var(--text-light); }
-
-        header {
-            background-color: #FFFFFF;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 70px;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        .logo span {
-            color: var(--accent-color);
-        }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            gap: 25px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--accent-color);
-        }
-
-        .hero {
-            height: 100vh;
-            background: linear-gradient(rgba(10, 37, 64, 0.8), rgba(0, 122, 204, 0.7)), 
-                        url('https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&q=80&w=1920') center/cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: #FFFFFF;
-            margin-top: 70px;
-        }
-
-        .hero-content h2 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-        }
-
-        .hero-content p {
-            font-size: 1.4rem;
-            margin-bottom: 30px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .btn-primary, .btn-secondary {
-            display: inline-block;
-            padding: 14px 28px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            text-decoration: none;
-            transition: var(--transition);
-            border: none;
-        }
-
-        .btn-primary {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-        }
-
-        .btn-primary:hover {
-            background-color: #00BFFF;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 212, 255, 0.3);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            border: 2px solid var(--accent-color);
-            color: var(--accent-color);
-            margin-top: 15px;
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--accent-color);
-            color: #FFFFFF;
-        }
-
-        .sobre-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
-
-        .sobre-texto h2 {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-
-        .sobre-texto p {
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            text-align: justify;
-        }
-
-        .sobre-imagem img {
-            width: 100%;
-            height: auto;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            object-fit: cover;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: #FFFFFF;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-            transition: var(--transition);
-            border-top: 4px solid var(--accent-color);
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-        }
-
-        .card-icon {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .card h3 {
-            margin-bottom: 15px;
-            color: var(--primary-color);
-        }
-
-        .product-card {
-            background: #FFFFFF;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: var(--transition);
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-
-        .product-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .product-content {
-            padding: 25px;
-            text-align: center;
-        }
-
-        .product-content h3 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        .contato-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 60px;
-        }
-
-        .contato-info h2 {
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-        }
-
-        .contato-info ul {
-            list-style: none;
-            margin-top: 30px;
-        }
-
-        .contato-info li {
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .contato-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            background: rgba(255,255,255,0.05);
-            padding: 35px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .contato-form input, 
-        .contato-form textarea {
-            padding: 16px;
-            border: none;
-            border-radius: 6px;
-            background: #FFFFFF;
-            width: 100%;
-            font-size: 1rem;
-            color: var(--text-dark);
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px 20px;
-            background-color: #051322;
-            color: #8C98A4;
-            font-size: 0.95rem;
-        }
-
-        .fade-in {
-            animation: fadeIn 1.2s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 992px) {
-            .sobre-grid, .contato-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero-content h2 {
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .nav-links {
-                display: none;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <div class="container header-container">
-            <div class="logo">Neo<span>Luminis</span></div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#home">Início</a></li>
-                    <li><a href="#sobre">Institucional</a></li>
-                    <li><a href="#remedios">Medicamentos</a></li>
-                    <li><a href="#outros">Bem-Estar</a></li>
-                    <li><a href="#contato">Contato</a></li>
-                </ul>
-            </nav>
+{% block content %}
+<section id="home" class="hero">
+    <div class="hero-content fade-in">
+        <h2>A Ciência do Cuidado Integral</h2>
+        <p>Sua saúde amparada por tecnologia, excelência farmacêutica e atendimento especializado.</p>
+        <a href="#remedios" class="btn-primary">Explorar Catálogo</a>
+    </div>
+</section>
+<section id="sobre" class="container section-padding">
+    <div class="sobre-grid">
+        <div class="sobre-texto">
+            <h2>Missão, Visão e Valores</h2>
+            <p>A <strong>Farmácia Neoluminis</strong> nasceu do propósito de modernizar o acesso à saúde. Nossa missão é fornecer soluções farmacológicas com agilidade e precisão, garantindo o bem-estar da comunidade.</p>
+            <p>Como visão, almejamos ser o principal polo de inovações em cuidados preventivos e tratamentos contínuos. Nossos valores são fundamentados na ética profissional, no rigor científico e na empatia com cada paciente que cruza nossas portas.</p>
         </div>
-    </header>
-
-    <section id="home" class="hero">
-        <div class="hero-content fade-in">
-            <h2>A Ciência do Cuidado Integral</h2>
-            <p>Sua saúde amparada por tecnologia, excelência farmacêutica e atendimento especializado.</p>
-            <a href="#remedios" class="btn-primary">Explorar Catálogo</a>
+        <div class="sobre-imagem">
+            <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&q=80&w=800" alt="Interior da Farmácia Neoluminis">
         </div>
-    </section>
-
-    <section id="sobre" class="container section-padding">
-        <div class="sobre-grid">
-            <div class="sobre-texto">
-                <h2>Missão, Visão e Valores</h2>
-                <p>A <strong>Farmácia Neoluminis</strong> nasceu do propósito de modernizar o acesso à saúde. Nossa missão é fornecer soluções farmacológicas com agilidade e precisão, garantindo o bem-estar da comunidade.</p>
-                <p>Como visão, almejamos ser o principal polo de inovações em cuidados preventivos e tratamentos contínuos. Nossos valores são fundamentados na ética profissional, no rigor científico e na empatia com cada paciente que cruza nossas portas.</p>
-            </div>
-            <div class="sobre-imagem">
-                <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&q=80&w=800" alt="Interior da Farmácia Neoluminis com prateleiras organizadas">
-            </div>
-        </div>
-    </section>
-
-    <section id="remedios" class="bg-light section-padding">
-        <div class="container">
-            <h2 class="section-title">Nossas Especialidades Farmacêuticas</h2>
-            <div class="cards-grid">
-                <div class="card">
-                    <span class="card-icon">💊</span>
-                    <h3>Medicamentos de Referência</h3>
-                    <p>Amplo estoque de medicações alopáticas para tratamentos agudos e intervenções rápidas.</p>
-                    <a href="#contato" class="btn-secondary">Consultar Estoque</a>
-                </div>
-                <div class="card">
-                    <span class="card-icon">🩺</span>
-                    <h3>Uso Contínuo e Crônicos</h3>
-                    <p>Programas de acompanhamento e fornecimento garantido para pacientes de longo prazo.</p>
-                    <a href="#contato" class="btn-secondary">Consultar Estoque</a>
-                </div>
-                <div class="card">
-                    <span class="card-icon">🔬</span>
-                    <h3>Manipulação Especializada</h3>
-                    <p>Fórmulas magistrais preparadas com precisão laboratorial para sua necessidade específica.</p>
-                    <a href="#contato" class="btn-secondary">Enviar Receita</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="outros" class="container section-padding">
-        <h2 class="section-title">Higiene, Suplementação e Serviços</h2>
+    </div>
+</section>
+<section id="remedios" class="bg-light section-padding">
+    <div class="container">
+        <h2 class="section-title">Nossas Especialidades Farmacêuticas</h2>
         <div class="cards-grid">
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=80&w=600" alt="Dermocosméticos" class="product-img">
-                <div class="product-content">
-                    <h3>Dermocosméticos</h3>
-                    <p>Produtos de alta performance para cuidados com a pele, aprovados por dermatologistas.</p>
-                </div>
+            <div class="card">
+                <span class="card-icon">💊</span>
+                <h3>Medicamentos de Referência</h3>
+                <p>Amplo estoque de medicações alopáticas para tratamentos agudos e intervenções rápidas.</p>
+                <a href="#contato" class="btn-secondary">Consultar Estoque</a>
             </div>
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&q=80&w=600" alt="Suplementos Vitamínicos" class="product-img">
-                <div class="product-content">
-                    <h3>Suplementação</h3>
-                    <p>Complexos vitamínicos e minerais para fortalecer a imunidade e garantir energia diária.</p>
-                </div>
+            <div class="card">
+                <span class="card-icon">🩺</span>
+                <h3>Uso Contínuo e Crônicos</h3>
+                <p>Programas de acompanhamento e fornecimento garantido para pacientes de longo prazo.</p>
+                <a href="#contato" class="btn-secondary">Consultar Estoque</a>
             </div>
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=600" alt="Serviços Laboratoriais" class="product-img">
-                <div class="product-content">
-                    <h3>Atenção Farmacêutica</h3>
-                    <p>Aferição de pressão arterial, testes de glicemia e acompanhamento profissional no local.</p>
-                </div>
+            <div class="card">
+                <span class="card-icon">🔬</span>
+                <h3>Manipulação Especializada</h3>
+                <p>Fórmulas magistrais preparadas com precisão laboratorial para sua necessidade específica.</p>
+                <a href="#contato" class="btn-secondary">Enviar Receita</a>
             </div>
         </div>
-    </section>
-
-    <section id="contato" class="bg-dark section-padding text-white">
-        <div class="container contato-grid">
-            <div class="contato-info">
-                <h2>Canais de Atendimento</h2>
-                <p>Nossa equipe de farmacêuticos está à disposição para orientações, cotações e recebimento de receituários digitais.</p>
-                <ul>
-                    <li>📍 Avenida das Inovações, 1024 - Centro Empresarial</li>
-                    <li>📞 (11) 4000-0000</li>
-                    <li>✉️ atendimento@neoluminis.com.br</li>
-                </ul>
+    </div>
+</section>
+<section id="outros" class="container section-padding">
+    <h2 class="section-title">Higiene, Suplementação e Serviços</h2>
+    <div class="cards-grid">
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=80&w=600" alt="Dermocosméticos" class="product-img">
+            <div class="product-content">
+                <h3>Dermocosméticos</h3>
+                <p>Produtos de alta performance para cuidados com a pele, aprovados por dermatologistas.</p>
             </div>
-            <form class="contato-form">
-                <input type="text" placeholder="Nome Completo" required>
-                <input type="email" placeholder="E-mail Profissional ou Pessoal" required>
-                <input type="tel" placeholder="Telefone para Contato" required>
-                <textarea rows="4" placeholder="Descreva sua solicitação ou anexe informações da receita..." required></textarea>
-                <button type="submit" class="btn-primary">Enviar Solicitação</button>
-            </form>
         </div>
-    </section>
-
-    <footer>
-        <p>&copy; 2026 Farmácia Neoluminis. Todos os direitos reservados. Responsável Técnico: Dr. Fictício da Silva - CRF 00000.</p>
-    </footer>
-
-</body>
-</html>
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&q=80&w=600" alt="Suplementos Vitamínicos" class="product-img">
+            <div class="product-content">
+                <h3>Suplementação</h3>
+                <p>Complexos vitamínicos e minerais para fortalecer a imunidade e garantir energia diária.</p>
+            </div>
+        </div>
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=600" alt="Serviços Laboratoriais" class="product-img">
+            <div class="product-content">
+                <h3>Atenção Farmacêutica</h3>
+                <p>Aferição de pressão arterial, testes de glicemia e acompanhamento profissional no local.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="contato" class="bg-dark section-padding text-white">
+    <div class="container contato-grid">
+        <div class="contato-info">
+            <h2>Canais de Atendimento</h2>
+            <p>Nossa equipe de farmacêuticos está à disposição para orientações, cotações e recebimento de receituários digitais.</p>
+            <ul>
+                <li>📍 Avenida das Inovações, 1024 - Centro Empresarial</li>
+                <li>📞 (11) 4000-0000</li>
+                <li>✉️ atendimento@neoluminis.com.br</li>
+            </ul>
+        </div>
+        <form class="contato-form" method="POST">
+            {% csrf_token %}
+            <input type="text" placeholder="Nome Completo" required>
+            <input type="email" placeholder="E-mail Profissional ou Pessoal" required>
+            <input type="tel" placeholder="Telefone para Contato" required>
+            <textarea rows="4" placeholder="Descreva sua solicitação ou anexe informações da receita..." required></textarea>
+            <button type="submit" class="btn-primary">Enviar Solicitação</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
