@@ -5,13 +5,22 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Medicamento
 from .forms import MedicamentoForm
+from django.db.models import Q
 
 def home(request):
     return render(request, 'website/index.html')
 
 @login_required(login_url='login')
 def estoque(request):
-    medicamentos = Medicamento.objects.all()
+    query = request.GET.get('q')
+    
+    if query:
+        medicamentos = Medicamento.objects.filter(
+            Q(nome__icontains=query) | Q(apresentacao__icontains=query)
+        )
+    else:
+        medicamentos = Medicamento.objects.all()
+        
     return render(request, 'website/painel.html', {'medicamentos': medicamentos})
 
 @login_required(login_url='login')
