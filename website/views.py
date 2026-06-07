@@ -105,3 +105,17 @@ def relatorios(request):
     }
     
     return render(request, 'website/relatorios.html', contexto)
+
+@login_required(login_url='login')
+def vender_medicamento(request, id):
+    medicamento = get_object_or_404(Medicamento, id=id)
+    
+    if medicamento.quantidade > 0:
+        medicamento.quantidade -= 1
+        
+        if medicamento.quantidade == 0:
+            medicamento.em_estoque = False
+            
+        medicamento.save()
+        
+    return redirect('estoque')

@@ -2,6 +2,8 @@
 {% block title %}Controle de Estoque | Farmácia Neoluminis{% endblock %}
 {% block extra_css %}
 <style>
+    .btn-sell { color: var(--success-color); }
+    .btn-sell:hover { transform: scale(1.1); filter: brightness(1.2); }
     .dashboard-container { max-width: 1200px; margin: 0 auto; }
     .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
     .dashboard-header h1 { color: var(--primary-color); font-size: 2rem; }
@@ -86,6 +88,9 @@
                         {% endif %}
                     </td>
                     <td class="action-btns">
+                        {% if medicamento.quantidade > 0 %}
+                            <a href="{% url 'vender_medicamento' medicamento.id %}" class="btn-icon btn-sell" title="Vender 1 Unidade">💸</a>
+                        {% endif %}
                         <a href="{% url 'editar_medicamento' medicamento.id %}" class="btn-icon btn-edit" title="Editar">✏️</a>
                         <a href="{% url 'excluir_medicamento' medicamento.id %}" class="btn-icon btn-delete" title="Excluir">🗑️</a>
                     </td>

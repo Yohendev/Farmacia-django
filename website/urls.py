@@ -11,4 +11,5 @@ urlpatterns = [
     path('cadastro/', views.cadastro_view, name='cadastro'),
     path('logout/', views.logout_view, name='logout'),
     path('relatorios/', views.relatorios, name='relatorios'),
+    path('vender/<int:id>/', views.vender_medicamento, name='vender_medicamento'),
 ]
