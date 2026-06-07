@@ -1,0 +1,16 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Página Não Encontrada | Farmácia Neoluminis{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 100px 20px; max-width: 600px; margin: 0 auto;">
+    <h1 style="font-size: 6rem; color: var(--danger-color); margin: 0; line-height: 1;">404</h1>
+    <h2 style="color: var(--primary-color); font-size: 2rem; margin-bottom: 20px;">Destino Indisponível</h2>
+    <p style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 40px;">
+        O endereço que você tentou acessar não existe no sistema, foi movido ou você não tem permissão para visualizá-lo.
+    </p>
+    <a href="{% url 'home' %}" style="background-color: var(--accent-color); color: #FFFFFF; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+        Retornar ao Painel Geral
+    </a>
+</div>
+{% endblock %}
