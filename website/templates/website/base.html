@@ -89,6 +89,100 @@
             background-color: #9CA3AF;
             color: #FFFFFF;
         }
+
+        #chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 320px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 9999;
+            transition: height 0.3s ease;
+        }
+        #chat-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #chat-body {
+            height: 400px;
+            display: none;
+            flex-direction: column;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+        #chat-history {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: #f8fafc;
+        }
+        .msg {
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 85%;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .msg-bot {
+            background-color: #e2e8f0;
+            color: #1e293b;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+        .msg-user {
+            background-color: var(--accent-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+        #chat-options {
+            padding: 10px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-top: 1px solid #eee;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        #chat-options::-webkit-scrollbar {
+            width: 6px;
+        }
+        #chat-options::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 10px;
+        }
+        .chat-btn {
+            background-color: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .chat-btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -108,5 +202,174 @@
     <footer>
         <p>&copy; 2026 Farmácia Neoluminis. Sistema de Controle de Estoque.</p>
     </footer>
+
+    <div id="chatbot-container">
+        <div id="chat-header" onclick="toggleChat()">
+            <span>🤖 NeoBot (Ajuda)</span>
+            <span id="chat-icon">▲</span>
+        </div>
+        <div id="chat-body">
+            <div id="chat-history"></div>
+            <div id="chat-options"></div>
+        </div>
+    </div>
+
+    <script>
+        let isChatOpen = false;
+        let chatIniciado = false;
+
+        function toggleChat() {
+            const body = document.getElementById('chat-body');
+            const icon = document.getElementById('chat-icon');
+            isChatOpen = !isChatOpen;
+            
+            if (isChatOpen) {
+                body.style.display = 'flex';
+                icon.innerText = '▼';
+                if (!chatIniciado) {
+                    iniciarChat();
+                    chatIniciado = true;
+                }
+            } else {
+                body.style.display = 'none';
+                icon.innerText = '▲';
+            }
+        }
+
+        function addMessage(text, sender) {
+            const history = document.getElementById('chat-history');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `msg msg-${sender}`;
+            msgDiv.innerText = text;
+            history.appendChild(msgDiv);
+            history.scrollTop = history.scrollHeight;
+        }
+
+        function showOptions(optionsArray) {
+            const optionsContainer = document.getElementById('chat-options');
+            optionsContainer.innerHTML = '';
+
+            optionsArray.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'chat-btn';
+                btn.innerText = opt;
+                btn.onclick = () => handleChoice(opt);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function iniciarChat() {
+            addMessage('Olá! Sou o assistente da Farmácia NeoLuminis. Como posso ajudar?', 'bot');
+            showOptions([
+                'Como cadastrar um remédio?', 
+                'Como editar ou excluir?',
+                'O que é a Baixa Rápida?', 
+                'Como funciona a busca?',
+                'Estou com problemas',
+                'Regras e Legislação',
+                'Dúvidas sobre o Sistema'
+            ]);
+        }
+
+        function handleChoice(escolhaUsuario) {
+            addMessage(escolhaUsuario, 'user');
+            
+            document.getElementById('chat-options').innerHTML = '';
+
+            setTimeout(() => {
+                if (escolhaUsuario === 'Como cadastrar um remédio?') {
+                    addMessage('Vá até a página de Estoque e clique no botão "+ Cadastrar Novo". Preencha o formulário, anexe a foto da caixa e clique em confirmar.', 'bot');
+                    showOptions(['Obrigado!', 'Voltar ao menu']);
+                
+                } else if (escolhaUsuario === 'Como editar ou excluir?') {
+                    addMessage('Na tabela principal, cada linha possui ícones. O lápis serve para editar os dados, e a lixeira para excluir permanentemente o item.', 'bot');
+                    showOptions(['O que acontece se eu excluir?', 'Obrigado!', 'Voltar ao menu']);
+                
+                } else if (escolhaUsuario === 'O que acontece se eu excluir?') {
+                    addMessage('A exclusão apaga o registro do banco de dados SQLite. É uma ação definitiva.', 'bot');
+                    showOptions(['Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'O que é a Baixa Rápida?') {
+                    addMessage('É o atalho para vendas. Basta clicar no ícone de moedas (💸) na tabela e o sistema desconta 1 unidade automaticamente.', 'bot');
+                    showOptions(['E se o estoque zerar?', 'Obrigado!', 'Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'E se o estoque zerar?') {
+                    addMessage('O botão de venda desaparece e o status do medicamento muda para "Esgotado", bloqueando vendas inválidas no sistema.', 'bot');
+                    showOptions(['Voltar ao menu']);
+                
+                } else if (escolhaUsuario === 'Como funciona a busca?') {
+                    addMessage('Há uma barra de pesquisa no topo. Digite o nome do remédio ou princípio ativo e os resultados são filtrados.', 'bot');
+                    showOptions(['Obrigado!', 'Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'Estou com problemas') {
+                    addMessage('Qual problema está ocorrendo?', 'bot');
+                    showOptions(['Erro 404', 'Esqueci a senha', 'A foto não aparece', 'Voltar ao menu']);
+                
+                } else if (escolhaUsuario === 'Erro 404') {
+                    addMessage('Você tentou acessar um endereço inexistente ou não tem permissão. Clique no botão da tela de erro para voltar ao painel.', 'bot');
+                    showOptions(['Voltar ao menu']);
+                
+                } else if (escolhaUsuario === 'Esqueci a senha') {
+                    addMessage('Apenas um Administrador pode redefinir senhas através do painel de controle /admin.', 'bot');
+                    showOptions(['Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'A foto não aparece') {
+                    addMessage('Verifique se o DEBUG está como True no arquivo .env e se o formulário HTML possui a tag enctype="multipart/form-data".', 'bot');
+                    showOptions(['Voltar ao menu']);
+                
+                } else if (escolhaUsuario === 'Regras e Legislação') {
+                    addMessage('Qual dúvida sobre as regras do sistema farmacêutico?', 'bot');
+                    showOptions(['Medicamentos Tarja Preta', 'Posso usar a foto real da caixa?', 'Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'Medicamentos Tarja Preta') {
+                    addMessage('Você pode cadastrar no sistema, mas a legislação exige a retenção da receita médica física durante a venda no balcão.', 'bot');
+                    showOptions(['Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'Posso usar a foto real da caixa?') {
+                    addMessage('Como este é um sistema interno para funcionários (estoque), sim. Se fosse um site aberto ao público, a ANVISA exigiria caixas brancas.', 'bot');
+                    showOptions(['Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'Dúvidas sobre o Sistema') {
+                    addMessage('O que você quer saber sobre a estrutura do Neoluminis?', 'bot');
+                    showOptions(['Como fazer logout?', 'Onde vejo relatórios?', 'O sistema tem backup?', 'Posso mudar as cores?', 'Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'Como fazer logout?') {
+                    addMessage('Basta clicar na opção "Sair" na barra de navegação superior, no lado direito.', 'bot');
+                    showOptions(['Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'Onde vejo relatórios?') {
+                    addMessage('Existe um botão "Relatórios" na navegação. Lá estarão os gráficos e extratos do estoque.', 'bot');
+                    showOptions(['Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'O sistema tem backup?') {
+                    addMessage('Os dados ficam no arquivo db.sqlite3 local. A cópia de segurança deve ser feita salvando este arquivo.', 'bot');
+                    showOptions(['Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'Posso mudar as cores?') {
+                    addMessage('A paleta de cores é fixa no código fonte (CSS). Não há um painel para alterar o tema visual no momento.', 'bot');
+                    showOptions(['Voltar ao menu']);
+
+                } else if (escolhaUsuario === 'Obrigado!') {
+                    addMessage('Disponha! Qualquer outra dúvida é só chamar.', 'bot');
+                    showOptions(['Voltar ao menu']);
+                
+                } else if (escolhaUsuario === 'Voltar ao menu') {
+                    addMessage('Retornando às opções principais...', 'bot');
+                    showOptions([
+                        'Como cadastrar um remédio?', 
+                        'Como editar ou excluir?',
+                        'O que é a Baixa Rápida?', 
+                        'Como funciona a busca?',
+                        'Estou com problemas',
+                        'Regras e Legislação',
+                        'Dúvidas sobre o Sistema'
+                    ]);
+                } else {
+                    addMessage('Não compreendi esta opção.', 'bot');
+                    showOptions(['Voltar ao menu']);
+                }
+            }, 600);
+        }
+    </script>
 </body>
 </html>
